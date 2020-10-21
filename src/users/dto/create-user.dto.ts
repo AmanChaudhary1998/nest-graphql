@@ -8,6 +8,4 @@ export class UserType {
     readonly name: string;
     @Field()
     readonly email: string;
-    @Field()
-    readonly password: string;
   }

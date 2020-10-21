@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-//import { CatsModule } from './cats/cats.module';
 import { UserModule } from './users/user.module';
 
 @Module({
