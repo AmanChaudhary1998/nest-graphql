@@ -6,25 +6,17 @@ type UserType {
   id: ID!
   name: String!
   email: String!
-  password: String!
 }
 
 type Query {
   hello: String!
   Users: [UserType!]!
+  me: UserType!
 }
-
-type Query {
-  me: UserType
-}
-
-type Mutation {
-    login(email: String):String!
-}
-
 
 type Mutation {
   createUser(input: UserInput!): UserType!
+  login(email: String!): String!
 }
 
 input UserInput {

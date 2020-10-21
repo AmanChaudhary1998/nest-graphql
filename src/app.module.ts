@@ -11,7 +11,7 @@ import { UserModule } from './users/user.module';
     UserModule,
     GraphQLModule.forRoot({
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-
+    context: ({ req }) => ({ headers: req.headers }),
   }),
   MongooseModule.forRoot('mongodb://localhost/nest'),
   ],

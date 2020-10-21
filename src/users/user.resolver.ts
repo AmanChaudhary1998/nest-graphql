@@ -33,7 +33,7 @@ export class UserResolver {
     return await user;
   }
 
-  @Mutation(()=>UserInput)
+  @Mutation(()=>String)
   async login(@Args('email') email : string){
     let user = await this.UserService.getUserByEmail(email);
     return this.UserService.createwebtoken(user);

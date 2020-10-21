@@ -21,8 +21,8 @@ export class UserService {
     return await createdUser.save();
   }
 
-  async createwebtoken({name, email}: User){
-   return jwt.sign({name,email },'secret');
+  async createwebtoken({id,name, email}: User){
+   return jwt.sign({id,name,email },'secret');
   }
 
   async findAll(): Promise<User[]> {
