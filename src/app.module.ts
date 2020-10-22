@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './users/user.module';
+import { UserModule } from './module/user/user.module';
 
 @Module({
   imports: [

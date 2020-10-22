@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserType } from './dto/create-User.dto';
 
 
-import { UserInput } from './inputs/User.input';
+import { UserInput } from './input/User.input';
 import { User } from './user.schema';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -28,7 +28,6 @@ export class UserService {
   async findAll(): Promise<User[]> {
     const user = await this.UserModel.find();
     user.forEach(function (v) {delete v.password});
-    console.log(user);
     return user;
   }
 
