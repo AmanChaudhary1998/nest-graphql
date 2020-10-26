@@ -2,9 +2,13 @@ import { UseGuards } from "@nestjs/common";
 import { Resolver,Query, Args, Mutation, Context } from "@nestjs/graphql";
 import { AuthGuard } from "./auth.guard";
 import { UserType } from "./dto/create-User.dto";
+
 import { UserInput } from "./input/User.input";
+import * as bcrypt from 'bcrypt';
 import { User } from "./user.schema";
 import { UserService } from "./user.service";
+import { ApolloError } from "apollo-server-express";
+import { UserInterface } from "./interface/user.interface";
 
 @Resolver()
 export class UserResolver {
@@ -34,9 +38,23 @@ export class UserResolver {
   }
 
   @Mutation(()=>String)
-  async login(@Args('email') email : string){
-    let user = await this.UserService.getUserByEmail(email);
-    return this.UserService.createwebtoken(user);
-  }
-
+  async login(@Args('email') email : string,
+              @Args('password') p:string): Promise<String>{
+    const user = await this.UserService.getUserByEmail(email);
+    const {password,_id} = user
+    //console.log(password,_id);
+    const pass = user.password;
+    const check = bcrypt.compareSync(p,pass)
+      //console.log(check);
+      if(!check){
+       throw new ApolloError("Password Incorrect");
+      }
+      // if(err)
+      // {
+      //   throw err;
+      // }else if(!isMatch){
+      //   throw new ApolloError("Password Incorrect");
+      // }
+      return await this.UserService.createwebtoken(_id);
+    }
 }

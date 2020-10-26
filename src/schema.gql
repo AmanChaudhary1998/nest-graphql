@@ -16,7 +16,7 @@ type Query {
 
 type Mutation {
   createUser(input: UserInput!): UserType!
-  login(email: String!): String!
+  login(password: String!, email: String!): String!
 }
 
 input UserInput {

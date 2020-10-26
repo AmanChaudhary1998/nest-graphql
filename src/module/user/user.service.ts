@@ -9,10 +9,11 @@ import { UserInput } from './input/User.input';
 import { User } from './user.schema';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { UserInterface } from './interface/user.interface';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private UserModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private UserModel: Model<UserInterface>) {}
 
 
   async create(creatUserInput: UserInput): Promise<User> {
@@ -21,8 +22,10 @@ export class UserService {
     return await createdUser.save();
   }
 
-  async createwebtoken({id,name, email}: User){
-   return jwt.sign({id,name,email },'secret');
+  async createwebtoken(id): Promise<String>{
+   const j =  jwt.sign({id},'secret');
+   //console.log(j);
+   return j;
   }
 
   async findAll(): Promise<User[]> {
@@ -31,8 +34,8 @@ export class UserService {
     return user;
   }
 
-  async getUserByEmail(email: string){
-    return await this.UserModel.findOne({email});
+  async getUserByEmail(email: string): Promise<UserInterface>{
+    return await this.UserModel.findOne({email:email}).lean();
   }
   
 }
