@@ -1,60 +1,68 @@
-import { UseGuards } from "@nestjs/common";
-import { Resolver,Query, Args, Mutation, Context } from "@nestjs/graphql";
-import { AuthGuard } from "./auth.guard";
-import { UserType } from "./dto/create-User.dto";
+import { UseGuards } from '@nestjs/common';
+import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 
-import { UserInput } from "./input/User.input";
+import { ApolloError } from 'apollo-server-express';
 import * as bcrypt from 'bcrypt';
-import { User } from "./user.schema";
-import { UserService } from "./user.service";
-import { ApolloError } from "apollo-server-express";
-import { UserInterface } from "./interface/user.interface";
+
+import { AuthGuard } from './auth.guard';
+import { UserType } from './type/user.type';
+import { UserInput } from './input/User.input';
+import { UserService } from './user.service';
+import { UserInterface } from './interface/user.interface';
 
 @Resolver()
 export class UserResolver {
-  constructor(
-      private readonly UserService : UserService
-  ) {}
+  constructor(private readonly UserService: UserService) {}
 
-  @Query(()=> String)
+  @Query(() => String)
   async hello() {
     return 'hello';
   }
 
-  @Query(()=> [UserType])
-  async Users(){
-      return await this.UserService.findAll()
+  @Query(() => [UserType])
+  async Users(): Promise<UserInterface[]> {
+    const result = await this.UserService.find();
+    console.log(result);
+    const data = JSON.stringify(result).replace(/_id/g, 'id');
+    const users = JSON.parse(data);
+    return users.map(({ id, name, email }) => {
+      return {
+        id,
+        name,
+        email,
+      };
+    });
+    // export const mutateId = result => {
+    //   const res = JSON.stringify(result).replace(/_id/g, 'id');
+    //   return JSON.parse(res);
+    // };
   }
 
-  @Mutation(()=> UserType)
-  async createUser(@Args('input')  input : UserInput) {
+  @Mutation(() => UserType)
+  async createUser(@Args('input') input: UserInput) {
     return await this.UserService.create(input);
   }
 
-  @Query(()=>UserType)
+  @Query(() => UserType)
   @UseGuards(new AuthGuard())
-  async me(@Context('user') user:User){
+  async me(@Context('user') user: UserInterface): Promise<UserInterface> {
     return await user;
   }
 
-  @Mutation(()=>String)
-  async login(@Args('email') email : string,
-              @Args('password') p:string): Promise<String>{
-    const user = await this.UserService.getUserByEmail(email);
-    const {password,_id} = user
+  @Mutation(() => String)
+  async login(
+    @Args('email') email: string,
+    @Args('password') p: string,
+  ): Promise<String> {
+    const user = await this.UserService.findOne({email}); 
+    const { password,_id } = user;
     //console.log(password,_id);
     const pass = user.password;
-    const check = bcrypt.compareSync(p,pass)
-      //console.log(check);
-      if(!check){
-       throw new ApolloError("Password Incorrect");
-      }
-      // if(err)
-      // {
-      //   throw err;
-      // }else if(!isMatch){
-      //   throw new ApolloError("Password Incorrect");
-      // }
-      return await this.UserService.createwebtoken(_id);
+    const check = bcrypt.compareSync(p, pass);
+    //console.log(check);
+    if (!check) {
+      throw new ApolloError('Password Incorrect');
     }
+    return await this.UserService.createwebtoken(_id);
+  }
 }
