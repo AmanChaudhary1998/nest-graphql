@@ -32,10 +32,6 @@ export class UserResolver {
         email,
       };
     });
-    // export const mutateId = result => {
-    //   const res = JSON.stringify(result).replace(/_id/g, 'id');
-    //   return JSON.parse(res);
-    // };
   }
 
   @Mutation(() => UserType)
@@ -56,10 +52,8 @@ export class UserResolver {
   ): Promise<String> {
     const user = await this.UserService.findOne({email}); 
     const { password,_id } = user;
-    //console.log(password,_id);
     const pass = user.password;
     const check = bcrypt.compareSync(p, pass);
-    //console.log(check);
     if (!check) {
       throw new ApolloError('Password Incorrect');
     }

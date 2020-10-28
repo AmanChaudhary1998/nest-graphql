@@ -6,7 +6,7 @@ import { UserType } from './type/user.type';
 
 
 import { UserInput } from './input/User.input';
-import { UserSchema } from './user.schema';
+import { UserSchema } from './schema/user.schema';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { UserInterface } from './interface/user.interface';
@@ -31,10 +31,7 @@ export class UserService {
     return await this.UserModel.find();
   }
 
-  // async specifydata({_id,name,email}):Promise<UserInterface[]> {
-  //   return await this.UserModel.find({_id:id,name:name,email:email}).lean()
-  // }
-
+  
   async findOne(query): Promise<UserInterface>{
     return await this.UserModel.findOne(query).lean();
   }
