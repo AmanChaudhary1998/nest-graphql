@@ -2,13 +2,14 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 
 import { ApolloError } from 'apollo-server-express';
-import * as bcrypt from 'bcrypt';
+
 
 import { AuthGuard } from './auth.guard';
 import { UserType } from './type/user.type';
 import { UserInput } from './input/User.input';
 import { UserService } from './user.service';
 import { UserInterface } from './interface/user.interface';
+import { comparePass, mutateId } from '../helper/helper';
 
 @Resolver()
 export class UserResolver {
@@ -22,9 +23,7 @@ export class UserResolver {
   @Query(() => [UserType])
   async Users(): Promise<UserInterface[]> {
     const result = await this.UserService.find();
-    console.log(result);
-    const data = JSON.stringify(result).replace(/_id/g, 'id');
-    const users = JSON.parse(data);
+    const users = mutateId(result);
     return users.map(({ id, name, email }) => {
       return {
         id,
@@ -40,9 +39,11 @@ export class UserResolver {
   }
 
   @Query(() => UserType)
-  @UseGuards(new AuthGuard())
-  async me(@Context('user') user: UserInterface): Promise<UserInterface> {
-    return await user;
+  @UseGuards(AuthGuard)
+  async me(@Context() context) {
+    const { user } = context.req;
+    const userData = await this.UserService.findOne({ _id: user })
+    return mutateId(userData)
   }
 
   @Mutation(() => String)
@@ -51,12 +52,12 @@ export class UserResolver {
     @Args('password') p: string,
   ): Promise<String> {
     const user = await this.UserService.findOne({email}); 
-    const { password,_id } = user;
+    const { password, _id } = user;
     const pass = user.password;
-    const check = bcrypt.compareSync(p, pass);
+    const check = comparePass(p,pass);
     if (!check) {
       throw new ApolloError('Password Incorrect');
     }
-    return await this.UserService.createwebtoken(_id);
+    return await this.UserService.createwebtoken(String(_id));
   }
 }

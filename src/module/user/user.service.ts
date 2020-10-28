@@ -6,11 +6,11 @@ import { UserType } from './type/user.type';
 
 
 import { UserInput } from './input/User.input';
-import { UserSchema } from './schema/user.schema';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { UserInterface } from './interface/user.interface';
 import { ModelName } from '../helper/enum';
+import { mutateId } from '../helper/helper';
 
 @Injectable()
 export class UserService {
@@ -23,8 +23,8 @@ export class UserService {
     return await createdUser.save();
   }
 
-  async createwebtoken({id}): Promise<String>{
-    return jwt.sign({id},'secret');
+  async createwebtoken(id): Promise<String>{
+    return jwt.sign(String(id),'secret');
   }
 
   async find(): Promise<UserInterface[]> {
