@@ -2,15 +2,13 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { UserType } from './type/user.type';
-
-
-import { UserInput } from './input/User.input';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+
+import { UserInput } from './input/User.input';
 import { UserInterface } from './interface/user.interface';
 import { ModelName } from '../helper/enum';
-import { mutateId } from '../helper/helper';
+
 
 @Injectable()
 export class UserService {
@@ -27,13 +25,17 @@ export class UserService {
     return jwt.sign(String(id),'secret');
   }
 
-  async find(): Promise<UserInterface[]> {
-    return await this.UserModel.find();
+  async find(populate?): Promise<UserInterface[]> {
+    return await this.UserModel.find().populate(populate);
   }
 
   
   async findOne(query): Promise<UserInterface>{
     return await this.UserModel.findOne(query).lean();
+  }
+    
+  async updateMany(query, update): Promise<UserInterface>{
+    return await this.UserModel.updateMany(query, update);
   }
   
 }

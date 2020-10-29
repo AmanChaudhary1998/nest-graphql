@@ -10,15 +10,16 @@ import { UserInput } from './input/User.input';
 import { UserService } from './user.service';
 import { UserInterface } from './interface/user.interface';
 import { comparePass, mutateId } from '../helper/helper';
+import { actionMessages } from '../errors/actionMessage';
 
 @Resolver()
 export class UserResolver {
   constructor(private readonly UserService: UserService) {}
 
-  @Query(() => String)
-  async hello() {
-    return 'hello';
-  }
+  // @Query(() => String)
+  // async hello() {
+  //   return 'hello';
+  // }
 
   @Query(() => [UserType])
   async Users(): Promise<UserInterface[]> {
@@ -56,7 +57,7 @@ export class UserResolver {
     const pass = user.password;
     const check = comparePass(p,pass);
     if (!check) {
-      throw new ApolloError('Password Incorrect');
+      throw actionMessages.error.passwordNotMatch;
     }
     return await this.UserService.createwebtoken(String(_id));
   }

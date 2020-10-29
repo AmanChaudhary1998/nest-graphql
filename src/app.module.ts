@@ -6,10 +6,12 @@ import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CompanyModule } from './module/company/company.module';
 import { UserModule } from './module/user/user.module';
 
 @Module({
   imports: [
+    CompanyModule,
     UserModule,
     GraphQLModule.forRoot({
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
