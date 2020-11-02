@@ -1,9 +1,7 @@
 import { Resolver,Query, Mutation, Args } from "@nestjs/graphql";
 
 import { mutateId } from "../helper/helper";
-import { UserType } from "../user/type/user.type";
-import { UserService } from "../user/user.service";
-
+import { UserService } from "../user/user.service"; 
 import { CompanyService } from "./company.service";
 import { CompanyInput } from "./input/company.input";
 import { CompanyInterface } from "./interface/company.interface";

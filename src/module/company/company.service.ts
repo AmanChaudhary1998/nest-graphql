@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+
 import { ModelName } from "../helper/enum";
 import { CompanyInterface } from "./interface/company.interface";
 
@@ -27,13 +28,14 @@ export class CompanyService {
         return await this.CompanyModel.find().populate(populate)
     }
 
-    async update(query,update):Promise<CompanyInterface>{
-        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).populate('users'); // {new : true } is used to update result in doc variables     
+    async update(query,update,populate?):Promise<CompanyInterface>{
+        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).then((doc)=>{ 
+            if(populate)
+            {
+                return doc.populate(populate).execPopulate()
+            }
+            return doc
+        })   
     }
-
-    async delete(query,remove):Promise<CompanyInterface>{
-        return await this.CompanyModel.findOneAndDelete(query,remove).populate('users')
-    }
-
 
 }

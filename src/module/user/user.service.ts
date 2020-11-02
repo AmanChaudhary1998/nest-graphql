@@ -42,13 +42,4 @@ export class UserService {
     return await this.UserModel.updateMany(query, update);
   }
 
-
-  // async updateUser(query)
-  
-  // async delete(id,input) {
-  //   const value= await this.UserModel.deleteOne({_id: {$in : input.users.id}})
-  //   console.log(value);
-  //   return value;
-  // }
-
 }
