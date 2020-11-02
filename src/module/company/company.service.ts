@@ -29,13 +29,8 @@ export class CompanyService {
     }
 
     async update(query,update,populate?):Promise<CompanyInterface>{
-        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).then((doc)=>{ 
-            if(populate)
-            {
-                return doc.populate(populate).execPopulate()
-            }
-            return doc
-        })   
+        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).populate(populate)
     }
+
 
 }
