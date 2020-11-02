@@ -1,4 +1,7 @@
 import { Resolver,Query, Mutation, Args } from "@nestjs/graphql";
+
+import { mutateId } from "../helper/helper";
+import { UserType } from "../user/type/user.type";
 import { UserService } from "../user/user.service";
 
 import { CompanyService } from "./company.service";
@@ -16,12 +19,15 @@ export class CompanyResolver {
     }
 
     @Query(()=>[CompanyType])
-    async Employee() : Promise<CompanyInterface[]> {
-        return await this.CompanyService.find()
+    async company() : Promise<CompanyInterface[]> {
+        const value= await this.CompanyService.find({path:'users'})
+        const result = mutateId(value);
+        console.log(result);
+        return result;
     }
 
     @Mutation(()=> CompanyType)
-    async create(@Args('input') input: CompanyInput){
+    async createCompany(@Args('input') input: CompanyInput){
         const data = await this.CompanyService.create(input, {
             path: 'users'
         });
@@ -30,5 +36,29 @@ export class CompanyResolver {
         }
         console.log(data);
         return data
+    }
+
+    @Mutation(()=>CompanyType)
+    async findOne(@Args('id') id: String){
+        const result =  await this.CompanyService.findOne({_id: id});
+        const check = await mutateId(result);
+        return(check);
+    }
+
+    @Mutation(()=> CompanyType)
+    async addUser(@Args('companyId') companyId: String,
+            @Args('userId') userId:String){
+                const check=await this.CompanyService.update({_id: companyId },{$addToSet: {users: userId}})
+                const updated = mutateId(check);
+                return updated;
+    }
+
+    @Mutation(()=> CompanyType)
+    async removeUser(@Args('companyId') companyId: String,
+                @Args('userId') userId:String){
+                    const success = await this.CompanyService.update({_id :companyId}, {$pull : {users: userId}})
+                    const removed = mutateId(success);
+                    console.log(removed);
+                    return removed;
     }
 }

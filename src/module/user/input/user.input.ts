@@ -9,6 +9,6 @@ export class UserInput
     readonly email: string;
     @Field()
      password: string;
-     @Field()
+     @Field({nullable:true})
      company: string
 }

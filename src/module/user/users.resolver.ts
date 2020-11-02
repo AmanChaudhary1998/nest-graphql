@@ -1,9 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 
-import { ApolloError } from 'apollo-server-express';
-
-
 import { AuthGuard } from './auth.guard';
 import { UserType } from './type/user.type';
 import { UserInput } from './input/User.input';
@@ -16,27 +13,27 @@ import { actionMessages } from '../errors/actionMessage';
 export class UserResolver {
   constructor(private readonly UserService: UserService) {}
 
-  // @Query(() => String)
-  // async hello() {
-  //   return 'hello';
-  // }
-
   @Query(() => [UserType])
   async Users(): Promise<UserInterface[]> {
-    const result = await this.UserService.find();
-    const users = mutateId(result);
-    return users.map(({ id, name, email }) => {
+    const result = await this.UserService.find({path:'company'});
+    //console.log(result);
+    const user = mutateId(result);
+    console.log(user)
+    return user.map(({ id, name, email, company }) => {
       return {
         id,
         name,
         email,
+        company
       };
     });
   }
 
   @Mutation(() => UserType)
   async createUser(@Args('input') input: UserInput) {
-    return await this.UserService.create(input);
+    const created =  await this.UserService.create(input);
+    const result = mutateId(created);
+    return result;
   }
 
   @Query(() => UserType)

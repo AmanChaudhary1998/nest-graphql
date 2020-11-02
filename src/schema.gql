@@ -18,13 +18,16 @@ type CompanyType {
 
 type Query {
   hello: String!
-  Employee: [CompanyType!]!
+  company: [CompanyType!]!
   Users: [UserType!]!
   me: UserType!
 }
 
 type Mutation {
-  create(input: CompanyInput!): CompanyType!
+  createCompany(input: CompanyInput!): CompanyType!
+  findOne(id: String!): CompanyType!
+  addUser(userId: String!, companyId: String!): CompanyType!
+  removeUser(userId: String!, companyId: String!): CompanyType!
   createUser(input: UserInput!): UserType!
   login(password: String!, email: String!): String!
 }
@@ -39,5 +42,5 @@ input UserInput {
   name: String!
   email: String!
   password: String!
-  company: String!
+  company: String
 }
