@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+
 import { ModelName } from "src/module/helper/enum";
 
 export const CompanySchema = new Schema({
