@@ -19,7 +19,7 @@ export class UserService {
     creatUserInput.password = await bcrypt.hash(creatUserInput.password,12);
     const createdUser = await this.UserModel.create(creatUserInput)
     const result =  await createdUser.populate('company').execPopulate()
-      return result.save();
+      return result;
     
   }
 
