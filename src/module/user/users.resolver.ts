@@ -7,7 +7,7 @@ import { UserInput } from './input/User.input';
 import { UserService } from './user.service';
 import { UserInterface } from './interface/user.interface';
 import { comparePass, mutateId } from '../helper/helper';
-import { actionMessages } from '../actionmessage/action-message';
+import { actionMessages } from '../action-message/action-message';
 
 @Resolver()
 export class UserResolver {
