@@ -17,7 +17,7 @@ export class UserService {
 
   async create(creatUserInput: UserInput): Promise<UserInterface> {
     creatUserInput.password = await bcrypt.hash(creatUserInput.password,12);
-    const createdUser = new this.UserModel(creatUserInput);
+    const createdUser = await this.UserModel.create(creatUserInput)
     const result =  await createdUser.populate('company').execPopulate()
       return result.save();
     
@@ -35,7 +35,8 @@ export class UserService {
 
   
   async findOne(query): Promise<UserInterface>{
-    return await this.UserModel.findOne(query).lean();
+    const user =  await this.UserModel.findOne(query).populate('company');
+    return user;
   }
     
   async updateMany(query, update): Promise<UserInterface>{

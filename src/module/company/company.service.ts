@@ -18,18 +18,18 @@ export class CompanyService {
         });
     }
 
-    async findOne(query):Promise<CompanyInterface>{
+    async findOne(query,populate?):Promise<CompanyInterface>{
         const result = await this.CompanyModel.findOne(query);
         console.log(result);
-        return result.populate('users').execPopulate();
+        return result.populate(populate);
     }
 
     async find(populate?): Promise<CompanyInterface[]> {
         return await this.CompanyModel.find().populate(populate)
     }
 
-    async update(query,update,populate?):Promise<CompanyInterface>{
-        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).populate(populate)
+    async update(query,update):Promise<CompanyInterface>{
+        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).populate('users')
     }
 
 

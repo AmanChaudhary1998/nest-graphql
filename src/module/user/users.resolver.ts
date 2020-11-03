@@ -16,7 +16,6 @@ export class UserResolver {
   @Query(() => [UserType])
   async Users(): Promise<UserInterface[]> {
     const result = await this.UserService.find({path:'company'});
-    //console.log(result);
     const user = mutateId(result);
     console.log(user)
     return user.map(({ id, name, email, company }) => {
