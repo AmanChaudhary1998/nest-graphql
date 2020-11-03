@@ -28,10 +28,6 @@ export class UserService {
     
   }
 
-  async token(id): Promise<String>{
-    return verify(id);
-  }
-
   async find(populate?): Promise<UserInterface[]> {
     const result= await this.UserModel.find().populate(populate);
     //console.log(result);
@@ -39,8 +35,8 @@ export class UserService {
   }
 
   
-  async findOne(query): Promise<UserInterface>{
-    const user =  await this.UserModel.findOne(query).populate('company');
+  async findOne(query,populate?): Promise<UserInterface>{
+    const user =  await this.UserModel.findOne(query).populate(populate);
     return user;
   }
     

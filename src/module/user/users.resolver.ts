@@ -6,7 +6,7 @@ import { UserType } from './type/user.type';
 import { UserInput } from './input/User.input';
 import { UserService } from './user.service';
 import { UserInterface } from './interface/user.interface';
-import { comparePass, mutateId } from '../helper/helper';
+import { comparePass, mutateId, verify } from '../helper/helper';
 import { actionMessages } from '../action-message/action-message';
 
 @Resolver()
@@ -39,7 +39,7 @@ export class UserResolver {
   @UseGuards(AuthGuard)
   async me(@Context() context) {
     const { user } = context.req;
-    const userData = await this.UserService.findOne({ _id: user })
+    const userData = await this.UserService.findOne({ _id: user },{path:'company'})
     return mutateId(userData)
   }
 
@@ -48,13 +48,13 @@ export class UserResolver {
     @Args('email') email: string,
     @Args('password') p: string,
   ): Promise<String> {
-    const user = await this.UserService.findOne({email}); 
+    const user = await this.UserService.findOne({email},{path:'company'}); 
     const { password, _id } = user;
     const pass = user.password;
     const check = comparePass(p,pass);
     if (!check) {
       throw actionMessages.error.passwordNotMatch;
     }
-    return await this.UserService.token(String(_id));
+    return await verify(String(_id))
   }
 }

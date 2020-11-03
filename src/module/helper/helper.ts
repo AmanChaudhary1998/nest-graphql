@@ -1,4 +1,3 @@
-import { ApolloError } from 'apollo-server-express';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 

@@ -5,7 +5,9 @@ import { ModelName } from 'src/module/helper/enum';
 
 export  const UserSchema = new Schema({
   name: {type : String},
-  email: {type : String},
+  email: {
+    type : String,
+    unique:true},
   company:{
     type:Schema.Types.ObjectId,
     ref: ModelName.COMPANY
