@@ -30,7 +30,7 @@ export class UserResolver {
 
   @Mutation(() => UserType)
   async createUser(@Args('input') input: UserInput) {
-    const created =  await this.UserService.create(input);
+    const created =  await this.UserService.create(input,{path:'company'});
     const result = mutateId(created);
     return result;
   }
