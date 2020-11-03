@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './guard/auth.guard';
 import { UserType } from './type/user.type';
 import { UserInput } from './input/User.input';
 import { UserService } from './user.service';
@@ -55,6 +55,6 @@ export class UserResolver {
     if (!check) {
       throw actionMessages.error.passwordNotMatch;
     }
-    return await this.UserService.createwebtoken(String(_id));
+    return await this.UserService.token(String(_id));
   }
 }

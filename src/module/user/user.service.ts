@@ -8,7 +8,7 @@ import * as jwt from 'jsonwebtoken';
 import { UserInput } from './input/User.input';
 import { UserInterface } from './interface/user.interface';
 import { ModelName } from '../helper/enum';
-import { doc } from 'prettier';
+import { verify } from '../helper/helper';
 
 
 @Injectable()
@@ -25,12 +25,11 @@ export class UserService {
       }
       return doc;
     })
-    //const result =  await createdUser.populate('company').execPopulate()
     
   }
 
-  async createwebtoken(id): Promise<String>{
-    return jwt.sign(String(id),'secret');
+  async token(id): Promise<String>{
+    return verify(id);
   }
 
   async find(populate?): Promise<UserInterface[]> {

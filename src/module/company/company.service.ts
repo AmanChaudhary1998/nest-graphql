@@ -28,8 +28,8 @@ export class CompanyService {
         return await this.CompanyModel.find().populate(populate)
     }
 
-    async update(query,update):Promise<CompanyInterface>{
-        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).populate('users')
+    async update(query,update,populate?):Promise<CompanyInterface>{
+        return await this.CompanyModel.findOneAndUpdate(query,update,{ new: true }).populate(populate)
     }
 
 

@@ -46,7 +46,7 @@ export class CompanyResolver {
     @Mutation(()=> CompanyType)
     async addUser(@Args('companyId') companyId: String,
             @Args('userId') userId:String){
-                const check=await this.CompanyService.update({_id: companyId },{$addToSet: {users: userId}})
+                const check=await this.CompanyService.update({_id: companyId },{$addToSet: {users: userId}},{path:'users'})
                 const updated = mutateId(check);
                 return updated;
     }
@@ -54,7 +54,7 @@ export class CompanyResolver {
     @Mutation(()=> CompanyType)
     async removeUser(@Args('companyId') companyId: String,
                 @Args('userId') userId:String){
-                    const success = await this.CompanyService.update({_id :companyId}, {$pull : {users: userId}})
+                    const success = await this.CompanyService.update({_id :companyId}, {$pull : {users: userId}},{path:'users'})
                     const removed = mutateId(success);
                     console.log(removed);
                     return removed;
